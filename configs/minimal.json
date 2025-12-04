@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "presets": {
+    "platform": {
+      "description": "Platform-recommended ratios for social media",
+      "ratios": ["2:3", "1:1"]
+    }
+  },
+  "sizes": {
+    "medium": {
+      "description": "Medium images (typical desktop uploads)",
+      "base_sizes": [1000]
+    }
+  },
+  "formats": {
+    "jpeg": {
+      "qualities": [85],
+      "mime_type": "image/jpeg",
+      "extension": ".jpg"
+    }
+  },
+  "targets": {
+    "PINTEREST_2_3": {
+      "platform": "Pinterest",
+      "dimensions": [1000, 1500],
+      "ratio": "2:3",
+      "description": "Pinterest optimal (portrait)"
+    },
+    "IG_FEED_1_1": {
+      "platform": "Instagram",
+      "dimensions": [1080, 1080],
+      "ratio": "1:1",
+      "description": "Instagram feed (square)"
+    }
+  },
+  "edge_cases": []
+}

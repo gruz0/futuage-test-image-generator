@@ -1,0 +1,127 @@
+{
+  "version": "1.0.0",
+  "presets": {
+    "platform": {
+      "description": "Platform-recommended ratios for social media",
+      "ratios": ["2:3", "4:5", "1:1", "9:16", "1.91:1"]
+    },
+    "common": {
+      "description": "Common photo ratios from cameras and screens",
+      "ratios": ["3:2", "4:3", "16:9", "5:4", "21:9"]
+    },
+    "edge": {
+      "description": "Edge case ratios for testing extreme scenarios",
+      "ratios": ["1:2", "2:1", "1:3", "3:1"]
+    }
+  },
+  "sizes": {
+    "tiny": {
+      "description": "Very small images (testing upscale needs)",
+      "base_sizes": [100, 150, 200]
+    },
+    "small": {
+      "description": "Small images (typical mobile uploads)",
+      "base_sizes": [500, 640, 800]
+    },
+    "medium": {
+      "description": "Medium images (typical desktop uploads)",
+      "base_sizes": [1000, 1080, 1200, 1500]
+    },
+    "large": {
+      "description": "Large images (high-quality photos)",
+      "base_sizes": [2000, 2160, 3000]
+    },
+    "xlarge": {
+      "description": "Extra-large images (photographer deliveries)",
+      "base_sizes": [4000, 4096, 5000]
+    }
+  },
+  "formats": {
+    "jpeg": {
+      "qualities": [60, 82, 95],
+      "mime_type": "image/jpeg",
+      "extension": ".jpg"
+    },
+    "png": {
+      "qualities": [95],
+      "mime_type": "image/png",
+      "extension": ".png"
+    },
+    "webp": {
+      "qualities": [82, 90],
+      "mime_type": "image/webp",
+      "extension": ".webp"
+    }
+  },
+  "targets": {
+    "PINTEREST_2_3": {
+      "platform": "Pinterest",
+      "dimensions": [1000, 1500],
+      "ratio": "2:3",
+      "description": "Pinterest optimal (portrait)"
+    },
+    "IG_FEED_4_5": {
+      "platform": "Instagram",
+      "dimensions": [1080, 1350],
+      "ratio": "4:5",
+      "description": "Instagram feed (portrait)"
+    },
+    "IG_FEED_1_1": {
+      "platform": "Instagram",
+      "dimensions": [1080, 1080],
+      "ratio": "1:1",
+      "description": "Instagram feed (square)"
+    },
+    "IG_STORY": {
+      "platform": "Instagram",
+      "dimensions": [1080, 1920],
+      "ratio": "9:16",
+      "description": "Instagram stories (vertical)"
+    },
+    "TIKTOK_9_16": {
+      "platform": "TikTok",
+      "dimensions": [1080, 1920],
+      "ratio": "9:16",
+      "description": "TikTok (vertical)"
+    },
+    "LI_1_1": {
+      "platform": "LinkedIn",
+      "dimensions": [1200, 1200],
+      "ratio": "1:1",
+      "description": "LinkedIn (square)"
+    },
+    "LI_1_91_1": {
+      "platform": "LinkedIn",
+      "dimensions": [1200, 628],
+      "ratio": "1.91:1",
+      "description": "LinkedIn (landscape)"
+    }
+  },
+  "edge_cases": [
+    {
+      "name": "too-small",
+      "dimensions": [50, 50],
+      "description": "Below minimum acceptable size"
+    },
+    {
+      "name": "max-res-square",
+      "dimensions": [4096, 4096],
+      "description": "Maximum allowed resolution (square)"
+    },
+    {
+      "name": "max-res-wide",
+      "dimensions": [4096, 2048],
+      "description": "Maximum resolution (ultra-wide 2:1)"
+    },
+    {
+      "name": "extreme-vertical",
+      "dimensions": [1000, 3000],
+      "description": "Extreme vertical ratio (1:3)"
+    },
+    {
+      "name": "extreme-horizontal",
+      "dimensions": [3000, 1000],
+      "description": "Extreme horizontal ratio (3:1)"
+    }
+  ]
+}
