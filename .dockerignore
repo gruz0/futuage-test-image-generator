@@ -1,0 +1,37 @@
+# =============================================================================
+# Docker Ignore - FutuAge Test Image Generator
+# =============================================================================
+
+# Build outputs
+dist/
+test-images/
+*.exe
+futuage-test-image-gen
+
+# Development files
+.git/
+.gitignore
+.vscode/
+.idea/
+*.md
+!configs/*.md
+
+# Test and coverage
+coverage.out
+coverage.html
+*_test.go
+
+# Docker files (no need to copy these into the build context)
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+

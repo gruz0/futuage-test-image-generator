@@ -184,6 +184,73 @@ clean-all: clean clean-dist ## Remove all generated files (binary, dist, test im
 	@echo "✓ All cleaned"
 
 # =============================================================================
+# Docker Targets
+# =============================================================================
+
+DOCKER_IMAGE := futuage-test-image-gen
+DOCKER_TAG := $(VERSION)
+DOCKER_FULL := $(DOCKER_IMAGE):$(DOCKER_TAG)
+
+.PHONY: docker-build
+docker-build: ## Build Docker image
+	@echo "Building Docker image $(DOCKER_FULL)..."
+	@docker build -t $(DOCKER_FULL) -t $(DOCKER_IMAGE):latest .
+	@echo "✓ Docker image built: $(DOCKER_FULL)"
+	@docker images $(DOCKER_IMAGE)
+
+.PHONY: docker-run
+docker-run: ## Run image generation in Docker (outputs to ./test-images/)
+	@echo "Running $(DOCKER_IMAGE) in Docker..."
+	@mkdir -p $(OUTPUT_DIR)
+	@docker run --rm \
+		-v $(CURDIR)/$(OUTPUT_DIR):/output \
+		$(DOCKER_IMAGE):latest
+	@echo "✓ Images generated in $(OUTPUT_DIR)/"
+
+.PHONY: docker-run-custom
+docker-run-custom: ## Run with custom config (CONFIG=path/to/config.json make docker-run-custom)
+	@if [ -z "$(CONFIG)" ]; then \
+		echo "Error: CONFIG is required. Usage: CONFIG=path/to/config.json make docker-run-custom"; \
+		exit 1; \
+	fi
+	@echo "Running $(DOCKER_IMAGE) with custom config: $(CONFIG)..."
+	@mkdir -p $(OUTPUT_DIR)
+	@docker run --rm \
+		-v $(CURDIR)/$(OUTPUT_DIR):/output \
+		-v $(CURDIR)/$(CONFIG):/configs/custom.json:ro \
+		$(DOCKER_IMAGE):latest \
+		generate --config /configs/custom.json --output /output
+	@echo "✓ Images generated in $(OUTPUT_DIR)/"
+
+.PHONY: docker-run-quick
+docker-run-quick: ## Run minimal generation in Docker (platform ratios, medium size, jpeg only)
+	@echo "Running $(DOCKER_IMAGE) (quick mode)..."
+	@mkdir -p $(OUTPUT_DIR)
+	@docker run --rm \
+		-v $(CURDIR)/$(OUTPUT_DIR):/output \
+		$(DOCKER_IMAGE):latest \
+		generate --ratios platform --sizes medium --formats jpeg --output /output
+	@echo "✓ Images generated in $(OUTPUT_DIR)/"
+
+.PHONY: docker-shell
+docker-shell: ## Run interactive shell (for debugging, uses alpine)
+	@echo "Starting debug shell..."
+	@docker run --rm -it \
+		-v $(CURDIR)/$(OUTPUT_DIR):/output \
+		--entrypoint /bin/sh \
+		golang:1.25-alpine
+
+.PHONY: docker-clean
+docker-clean: ## Remove Docker image
+	@echo "Removing Docker images..."
+	@docker rmi $(DOCKER_IMAGE):latest $(DOCKER_FULL) 2>/dev/null || true
+	@echo "✓ Docker images removed"
+
+.PHONY: docker-size
+docker-size: ## Show Docker image size
+	@docker images $(DOCKER_IMAGE) --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+
+# =============================================================================
 # Info Targets
 # =============================================================================
 
@@ -196,6 +263,10 @@ info: ## Show project information
 	@echo "  Go Version:  $(GO_VERSION)"
 	@echo "  Output Dir:  $(OUTPUT_DIR)"
 	@echo "  Build Dir:   $(BUILD_DIR)"
+	@echo ""
+	@echo "$(CYAN)Docker$(RESET)"
+	@echo "  Image:       $(DOCKER_IMAGE)"
+	@echo "  Tag:         $(DOCKER_TAG)"
 	@echo ""
 	@echo "$(CYAN)Source Files$(RESET)"
 	@find . -name "*.go" -not -path "./vendor/*" | wc -l | xargs echo "  Go files:   "

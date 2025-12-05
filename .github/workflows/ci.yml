@@ -87,3 +87,57 @@ jobs:
         uses: golangci/golangci-lint-action@v7
         with:
           version: v2.6.2
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: futuage-test-image-gen:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Test Docker image
+        run: |
+          # Build without buildx for local testing
+          docker build -t futuage-test-image-gen:test .
+
+          # Run quick generation test
+          mkdir -p test-output
+          docker run --rm \
+            -v ${{ github.workspace }}/test-output:/output \
+            futuage-test-image-gen:test \
+            generate --ratios platform --sizes medium --formats jpeg --output /output
+
+          # Verify output
+          echo "Generated files:"
+          ls -la test-output/
+
+          # Check manifest exists
+          if [ -f test-output/manifest.json ]; then
+            echo "✓ manifest.json found"
+          else
+            echo "✗ manifest.json not found"
+            exit 1
+          fi
+
+          # Count generated images
+          image_count=$(find test-output -name "*.jpg" | wc -l)
+          echo "✓ Generated ${image_count} JPEG images"
+
+          if [ "$image_count" -lt 1 ]; then
+            echo "✗ No images generated"
+            exit 1
+          fi

@@ -41,11 +41,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Docker support with multi-stage build (Alpine builder + scratch runtime)
+- Minimal Docker image (~4MB) with full WebP support via CGO static linking
+- Docker Makefile targets: `docker-build`, `docker-run`, `docker-run-custom`, `docker-run-quick`
+- Volume mount support for output images and custom configuration
+- `.dockerignore` for optimized build context
+- GitHub Actions workflow for Docker image build and test
+
 ### Planned Features
 
 - GitHub Actions workflow for releases
 - Pre-built binaries for macOS, Linux, Windows
-- Docker image for containerized usage
 - Additional platform targets (Twitter, Facebook, etc.)
 - Quality presets (low, medium, high)
 - Batch configuration support
